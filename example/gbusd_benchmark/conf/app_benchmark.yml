@@ -1,0 +1,57 @@
+# 通用配置
+common:
+    servername: 'test_bus_001'
+    loglevel: 'info'
+    listen: '0.0.0.0:18887'
+    applog: 'logs/app_benchmark.log'
+    errlog: "logs/err_benchmark.log"
+    pidfile: 'logs/gbusd_benchmark.pid'
+    debug: false
+    daemon: false
+    ipwhitelist : "*"
+
+# 配置Leader选举
+election:
+    type: "zookeeper"
+    servers: ["myserver.test.com:2181"]
+    root: "databus/election_serv"
+    enable: true
+
+# 数据库主库配置
+master:
+#    host: "myserver.test.com"
+#    port: 3306
+#    user: "root"
+#    password: "123qwe"
+#    dbname: "test"
+#    table: "test"
+#    serverid: 2115
+    host: "myserver.test.com"
+    #port: 110
+    port: 3315
+    user: "root"
+    password: ""
+    dbname: "test_gbusd"
+    table: "testdb"
+    serverid: 21
+
+
+# 下游Redis配置
+store:
+    type: "redis"
+    list: ["myserver.test.com:27000","myserver.test.com:27000","myserver.test.com:27000","myserver.test.com:27000",
+           "myserver.test.com:27001","myserver.test.com:27001","myserver.test.com:27001","myserver.test.com:27001",
+           "myserver.test.com:27002","myserver.test.com:27002","myserver.test.com:27002","myserver.test.com:27002",
+           "myserver.test.com:27003","myserver.test.com:27003","myserver.test.com:27003","myserver.test.com:27003"]
+
+# 存储binlog位置信息的redis Server
+meta:
+    addr: "myserver.test.com:27100"
+
+benchmark:
+    binlogFileName: "mysql-bin.000009"
+    binLogPos: 692
+    redisMaxCount: 20000
+    servChanLen: 200000
+
+

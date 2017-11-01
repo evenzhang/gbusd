@@ -1,7 +1,7 @@
 # 通用配置
 common:
     servername: 'redbag_bus_001'
-    loglevel: 'info'
+    loglevel: 'debug'
     listen: '0.0.0.0:18887'
     applog: 'logs/app_serv.log'
     errlog: "logs/err_serv.log"
@@ -20,12 +20,13 @@ election:
 # 数据库主库配置
 master:
     host: "myserver.test.com"
-    port: 3306
+    #port: 110
+    port: 3315
     user: "root"
     password: "123qwe"
-    dbname: "bonus_test"
-    table: "recv"
-    serverid: 2
+    dbname: "test_gbusd"
+    table: "testdb"
+    serverid: 21
 
 # 下游Redis配置
 store:

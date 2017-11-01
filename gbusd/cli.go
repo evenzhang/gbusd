@@ -2,8 +2,8 @@ package gbusd
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
-	"github.com/evenzhang/gbusd/gbusd/res"
 	"github.com/evenzhang/gbusd/gserv/log"
 	"os"
 	"regexp"
@@ -21,7 +21,11 @@ Help: > user-cmd
     quit    / q             Exit
 `
 
-func (this *BusdDaemon) cliShowMetaInfo() {
+func (this *Busd) ParserFlag() {
+	flag.BoolVar(&this.cliMeta, "cli", false, "Enable Cli mode.")
+}
+
+func (this *Busd) cliShowMetaInfo() {
 	fmt.Printf("*****************\n  Enter cli mode\n*****************\n")
 
 	masterFirstPos, err := this.master.GetFirstPos()
@@ -29,7 +33,7 @@ func (this *BusdDaemon) cliShowMetaInfo() {
 	masterCurPos, err := this.master.GetPos()
 	fmt.Printf("Master Info:\n\tcurrent pos => %s:%d \terr => %v\tsql:show master status\n", masterCurPos.FileName, masterCurPos.Pos, err)
 
-	fmt.Printf("\t first pos  => %s:%d\t\terr => %v\tsql:show binlog events limit 1\n", masterFirstPos.FileName, masterFirstPos.EndPos, err)
+	fmt.Printf("\t first pos  => %s:%d\t\terr => %v\tsql:show parse events limit 1\n", masterFirstPos.FileName, masterFirstPos.EndPos, err)
 
 	metaExist, err := this.meta.IsExist()
 	fmt.Printf("Redis Meta Info:\n\texist\t    => %t\t\t\t\terr => %v\n", metaExist, err)
@@ -38,7 +42,7 @@ func (this *BusdDaemon) cliShowMetaInfo() {
 		fmt.Printf("\tcurrent-pos => %s:%d\terr => %v\n", data.BinLogFileName, data.BinLogPos, e)
 	}
 }
-func (this *BusdDaemon) cliSetMeta(userCmd string, items []string) {
+func (this *Busd) cliSetMeta(userCmd string, items []string) {
 	if len(items) < 2 {
 		fmt.Println("param num error", items)
 		return
@@ -58,7 +62,7 @@ func (this *BusdDaemon) cliSetMeta(userCmd string, items []string) {
 
 	fmt.Println("    set succ")
 }
-func (this *BusdDaemon) enterCliMode() {
+func (this *Busd) enterCliMode() {
 	fmt.Println(cliUsageStr)
 
 	match, _ := regexp.MatchString("setmeta  [a-z][0-9]:", "setmeta   	    edu-mysql-bin.000001:214923")
@@ -93,7 +97,7 @@ func (this *BusdDaemon) enterCliMode() {
 		case "v":
 			fallthrough
 		case "version":
-			fmt.Println("  version:", res.RES_PROJ_VERSION)
+			fmt.Println("  version:", RES_PROJ_VERSION)
 
 		case "q":
 			fallthrough

@@ -101,6 +101,16 @@ func AppCfg(section string, key string) interface{} {
 	return _config.SettingMap[section][key]
 }
 
+func AppCfgStr(section string, key string) string {
+	return AppCfg(section, key).(string)
+}
+
+func AppCfgInt(section string, key string) int {
+	return AppCfg(section, key).(int)
+}
+func AppCfgArray(section string, key string) []interface{} {
+	return AppCfg(section, key).([]interface{})
+}
 func NewDefaultOptions() *Options {
 	common := Common{
 		ServerName:        "",

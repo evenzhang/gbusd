@@ -1,4 +1,4 @@
-package binlog
+package store
 
 import (
 	"fmt"
@@ -57,6 +57,8 @@ func GetMasterDsn() string {
 		config.AppCfg("master", "host").(string),
 		config.AppCfg("master", "port").(int),
 		config.AppCfg("master", "dbname").(string))
+
+	fmt.Println(dsn)
 	return dsn
 }
 func NewMaster() (*MasterDB, error) {

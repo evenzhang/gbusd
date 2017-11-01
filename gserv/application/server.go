@@ -3,14 +3,14 @@ package application
 import (
 	"flag"
 	"fmt"
-	. "github.com/logrusorgru/aurora"
-	"github.com/samuel/go-zookeeper/zk"
 	"github.com/evenzhang/gbusd/gserv/comm"
 	"github.com/evenzhang/gbusd/gserv/config"
 	"github.com/evenzhang/gbusd/gserv/curator"
 	"github.com/evenzhang/gbusd/gserv/daemon"
 	"github.com/evenzhang/gbusd/gserv/debug"
 	"github.com/evenzhang/gbusd/gserv/log"
+	. "github.com/logrusorgru/aurora"
+	"github.com/samuel/go-zookeeper/zk"
 	"net/http"
 	"os"
 	"strings"
@@ -87,8 +87,6 @@ func Usage() string {
 func (this *Application) LoadAndMergeConfigFile(opts *config.Options) error {
 	debug.Println("LoadAndMergeConfigFile start")
 	configFile := comm.GetCurrentDirectory() + this.projInfo.DefaultConfPath
-
-	fmt.Println(configFile)
 
 	if opts.Common.ConfigFile != "" {
 		configFile = opts.Common.ConfigFile

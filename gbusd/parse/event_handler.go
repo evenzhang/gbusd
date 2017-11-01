@@ -1,8 +1,17 @@
-package binlog
+package parse
 
 import (
 	"github.com/evenzhang/gbusd/gserv/log"
 )
+
+type IEventHandler interface {
+	OnInit() bool
+	OnInsert(Sender ISender, event *Event) (bool, error)
+	OnUpdate(Sender ISender, event *Event) (bool, error)
+	OnDelete(Sender ISender, event *Event) (bool, error)
+	OnClose()
+	Enable() bool
+}
 
 type BaseEventHandler struct {
 }
@@ -12,17 +21,17 @@ func (this *BaseEventHandler) OnInit() bool {
 	return true
 }
 
-func (this *BaseEventHandler) OnInsert(sender *Sender, ev *Event) (bool, error) {
+func (this *BaseEventHandler) OnInsert(sender ISender, ev *Event) (bool, error) {
 	log.Debugln("BaseEventHandler OnInsert", sender, ev)
 	return true, nil
 }
 
-func (this *BaseEventHandler) OnUpdate(sender *Sender, ev *Event) (bool, error) {
+func (this *BaseEventHandler) OnUpdate(sender ISender, ev *Event) (bool, error) {
 	log.Debugln("BaseEventHandler OnUpdate", sender, ev)
 	return true, nil
 }
 
-func (this *BaseEventHandler) OnDelete(sender *Sender, ev *Event) (bool, error) {
+func (this *BaseEventHandler) OnDelete(sender ISender, ev *Event) (bool, error) {
 	log.Debugln("BaseEventHandler OnDelete", sender, ev)
 	return true, nil
 }

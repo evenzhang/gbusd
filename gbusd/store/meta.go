@@ -1,4 +1,4 @@
-package binlog
+package store
 
 import (
 	"fmt"

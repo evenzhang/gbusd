@@ -1,14 +1,12 @@
-package api
+package gbusd
 
 import (
 	"encoding/json"
-	"github.com/juju/errors"
-	"github.com/evenzhang/gbusd/gbusd/binlog"
-	"github.com/evenzhang/gbusd/gbusd/res"
 	"github.com/evenzhang/gbusd/gbusd/store"
 	"github.com/evenzhang/gbusd/gserv/config"
 	"github.com/evenzhang/gbusd/gserv/daemon"
 	"github.com/evenzhang/gbusd/gserv/log"
+	"github.com/juju/errors"
 	"net/http"
 	"strings"
 	"time"
@@ -42,7 +40,7 @@ func apiGetVersion(w http.ResponseWriter, r *http.Request) {
 		renderError(w, err.Error(), "")
 		return
 	}
-	renderSucc(w, res.RES_PROJ_VERSION)
+	renderSucc(w, RES_PROJ_VERSION)
 }
 
 func apiGetConfig(w http.ResponseWriter, r *http.Request) {
@@ -56,11 +54,11 @@ func apiGetConfig(w http.ResponseWriter, r *http.Request) {
 	data["election"] = config.Config().Election
 	data["meta"] = config.AppCfg("meta", "addr").(string)
 
-	data["master"] = binlog.GetMasterDsn()
+	data["master"] = store.GetMasterDsn()
 
-	data["store"] = store.GetStoreConfig()
-	data["version"] = res.RES_PROJ_VERSION
-	data["runtime"] = res.GetAllRuntime()
+	data["store"] = config.AppCfgArray("store", "list")
+	data["version"] = RES_PROJ_VERSION
+	data["runtime"] = GetAllRuntime()
 
 	renderSucc(w, data)
 }
@@ -90,4 +88,10 @@ func checkLoginIP(r *http.Request) error {
 		return nil
 	}
 	return errors.Errorf("Access denied for ip[%s]", ip)
+}
+
+func RegisterAllApi() {
+	http.HandleFunc("/api/version", apiGetVersion)
+	http.HandleFunc("/api/conf", apiGetConfig)
+	http.HandleFunc("/api/restart", apiRestart)
 }

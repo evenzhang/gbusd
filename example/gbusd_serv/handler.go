@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/evenzhang/gbusd/gbusd/binlog"
+	"github.com/evenzhang/gbusd/gbusd/parse"
 	"github.com/evenzhang/gbusd/gserv/config"
 	"github.com/evenzhang/gbusd/gserv/debug"
 	"github.com/evenzhang/gbusd/gserv/log"
@@ -16,7 +16,7 @@ const (
 )
 
 type EventHandler struct {
-	binlog.BaseEventHandler
+	parse.BaseEventHandler
 	sha        string
 	redisCount int64
 }
@@ -27,18 +27,17 @@ func (this *EventHandler) OnInit() bool {
 	fmt.Println(redisList)
 	this.redisCount = int64(len(redisList.([]interface{})))
 
-	this.sha = config.AppCfg("store", "sha").(string)
 	return true
 }
-func (this *EventHandler) OnUpdate(sender *binlog.Sender, ev *binlog.Event) (bool, error) {
+func (this *EventHandler) OnUpdate(sender parse.ISender, ev *parse.Event) (bool, error) {
 	return this.process(sender, ev, ROW_UPDATA_NEW_DATA)
 }
 
-func (this *EventHandler) OnInsert(sender *binlog.Sender, ev *binlog.Event) (bool, error) {
+func (this *EventHandler) OnInsert(sender parse.ISender, ev *parse.Event) (bool, error) {
 	return this.process(sender, ev, ROW_INSERT_DATA)
 }
 
-func (this *EventHandler) process(sender *binlog.Sender, ev *binlog.Event, rowIndex int) (bool, error) {
+func (this *EventHandler) process(sender parse.ISender, ev *parse.Event, rowIndex int) (bool, error) {
 	if ev.TableName != "test" {
 		return true, nil
 	}
@@ -53,7 +52,7 @@ func (this *EventHandler) process(sender *binlog.Sender, ev *binlog.Event, rowIn
 	return true, nil
 }
 
-func NewEventHandler() binlog.IEventHandler {
+func NewEventHandler() parse.IEventHandler {
 	debug.Println("NewEventHandler")
 	return &EventHandler{}
 }

@@ -1,4 +1,4 @@
-package res
+package gbusd
 
 import (
 	"fmt"
